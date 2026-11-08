@@ -216,8 +216,11 @@ class StartOfPeriod(metaclass=abc.ABCMeta):
                     event.is_technical or event.is_double_technical
                 )
                 if player_id not in starters and player_id not in subbed_in_players:
+                    # compare times, not clock strings: live data clocks look like
+                    # "PT12M00.00S", and overtime periods start at 5:00
                     tech_ft_at_period_start = (
-                        isinstance(event, FreeThrow) and event.clock == "12:00"
+                        isinstance(event, FreeThrow)
+                        and event.seconds_remaining == self.seconds_remaining
                     )
                     if not (
                         is_technical_foul
