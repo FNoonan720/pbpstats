@@ -141,7 +141,13 @@ class Possession(object):
                         else team_ids[1]
                     )
                 return prev_event.get_offense_team_id()
-        return self.events[0].get_offense_team_id()
+        # Live data logs between-period substitutions before the "period start" event.
+        # Those subs carry the previous period's offense team, so skip them and use the
+        # first real event (usually the StartOfPeriod, which knows who has the ball).
+        first_event = next(
+            (e for e in self.events if not isinstance(e, Substitution)), self.events[0]
+        )
+        return first_event.get_offense_team_id()
 
     @property
     def possession_has_timeout(self):
