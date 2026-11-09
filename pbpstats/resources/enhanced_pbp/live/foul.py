@@ -121,4 +121,8 @@ class LiveFoul(Foul, LiveEnhancedPbpItem):
 
     @property
     def is_transition_take_foul(self):
-        return hasattr(self, "descriptor") and self.descriptor == "transition"
+        # The live feed says "transition take" (the 2022-23 rule), not "transition".
+        return hasattr(self, "descriptor") and self.descriptor in (
+            "transition",
+            "transition take",
+        )
